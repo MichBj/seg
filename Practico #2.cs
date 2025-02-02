@@ -5,17 +5,20 @@ class AsignaciondeAsientos
 {
     static void Main()
     {
-        //Aqui se simula la fila de espera
-        Stack<string> colaPersonas = new Stack<string>();
+        // Aquí se simula la fila de espera usando una Queue
+        Queue<string> colaPersonas = new Queue<string>();
         
-        //Personas iniciales en espera
-        colaPersonas.Push("Juan");
-        colaPersonas.Push("María");
-        colaPersonas.Push("Pedro");
-        colaPersonas.Push("Ana");
+        // Personas iniciales en espera
+        colaPersonas.Enqueue("Juan");
+        colaPersonas.Enqueue("María");
+        colaPersonas.Enqueue("Pedro");
+        colaPersonas.Enqueue("Ana");
         
         // Número total de asientos disponibles
         int asientosDisponibles = 30;
+        
+        // Lista para almacenar los asientos asignados
+        List<string> asientosAsignados = new List<string>();
         
         // Bucle principal para la atracción
         while (asientosDisponibles > 0)
@@ -23,17 +26,17 @@ class AsignaciondeAsientos
             // Si no hay nadie en la cola y quedan asientos, solicitar más personas
             if (colaPersonas.Count == 0)
             {
-                //Imprimimos un mensaje para agregara mas Gente hasta llegar a 30
+                // Imprimimos un mensaje para agregar más gente hasta llegar a 30
                 Console.WriteLine("No hay nadie en la cola. ¿Deseas añadir más personas? (s/n)");
                 string? respuesta = Console.ReadLine();
                 if (respuesta?.ToLower() == "s")
                 {
-                    //introducimos a mas gente a la fila
+                    // Introducimos a más gente a la fila
                     Console.WriteLine("Introduce el nombre de la nueva persona:");
                     string? nuevaPersona = Console.ReadLine();
-                    if (nuevaPersona != null)
+                    if (!string.IsNullOrEmpty(nuevaPersona))
                     {
-                        colaPersonas.Push(nuevaPersona);
+                        colaPersonas.Enqueue(nuevaPersona);
                         Console.WriteLine($"{nuevaPersona} ha sido añadido/a a la cola.");
                     }
                     else
@@ -50,18 +53,18 @@ class AsignaciondeAsientos
             else
             {
                 // Ver quién está primero en la cola sin sacarlo
-                string? persona = colaPersonas.Peek();
-                if (persona != null)
-                {
-                    Console.WriteLine($"Siguiente persona en la cola: {persona}");
+                string persona = colaPersonas.Peek();
+                Console.WriteLine($"Siguiente persona en la cola: {persona}");
                 
-                    // Sacar a la persona de la cola y asignarle un asiento
-                    colaPersonas.Pop();
-                    Console.WriteLine($"{persona} ha subido a la atracción.");
+                // Sacar a la persona de la cola y asignarle un asiento
+                colaPersonas.Dequeue();
+                Console.WriteLine($"{persona} ha subido a la atracción.");
                 
-                    // Decrementar el número de asientos disponibles
-                    asientosDisponibles--;
-                }
+                // Añadir la persona a la lista de asientos asignados
+                asientosAsignados.Add(persona);
+                
+                // Decrementar el número de asientos disponibles
+                asientosDisponibles--;
             }
         }
         
@@ -73,6 +76,13 @@ class AsignaciondeAsientos
         else
         {
             Console.WriteLine($"Quedan {asientosDisponibles} asientos disponibles.");
+        }
+        
+        // Mostrar los asientos asignados
+        Console.WriteLine("\nAsientos asignados:");
+        for (int i = 0; i < asientosAsignados.Count; i++)
+        {
+            Console.WriteLine($"Asiento {i + 1}: {asientosAsignados[i]}");
         }
     }
 }
